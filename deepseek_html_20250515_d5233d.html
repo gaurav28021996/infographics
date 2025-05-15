@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Infographic Generator</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #2d3748;
+            --primary: #4299e1;
+            --border-color: #e2e8f0;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a202c;
+            --text-color: #e2e8f0;
+            --primary: #63b3ed;
+            --border-color: #4a5568;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+            transition: background 0.3s ease;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .embedded-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--bg-color);
+            border-radius: 12px;
+        }
+
+        /* Dark Mode Toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-color);
+        }
+
+        /* File Upload */
+        .file-upload {
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .file-upload input {
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload label {
+            display: block;
+            padding: 12px;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        /* Real-time Preview Enhancements */
+        .preview-section {
+            position: relative;
+        }
+
+        .live-preview {
+            border: 2px solid var(--border-color);
+            padding: 1rem;
+            min-height: 200px;
+            margin: 1rem 0;
+            white-space: pre-wrap;
+        }
+
+        /* Social Sharing */
+        .social-sharing {
+            display: none;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .social-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .twitter { background: #1DA1F2; }
+        .facebook { background: #1877F2; }
+        .linkedin { background: #0A66C2; }
+
+        /* Previous styles here... */
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    
+    <div class="embedded-container">
+        <div class="input-section">
+            <h2>Create Your Infographic</h2>
+            
+            <div class="file-upload">
+                <input type="file" id="fileInput" accept=".txt,.md">
+                <label for="fileInput">📁 Upload Text File</label>
+            </div>
+
+            <textarea 
+                id="input-text" 
+                placeholder="Or paste text here..."
+                oninput="updateLivePreview()"></textarea>
+
+            <div class="live-preview" id="livePreview"></div>
+
+            <!-- Style Picker and Generate Button -->
+        </div>
+
+        <div class="preview-section">
+            <!-- Infographic Preview -->
+            <div class="social-sharing" id="socialSharing">
+                <a href="#" class="social-btn twitter" target="_blank">🐦 Twitter</a>
+                <a href="#" class="social-btn facebook" target="_blank">📘 Facebook</a>
+                <a href="#" class="social-btn linkedin" target="_blank">💼 LinkedIn</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark Mode Toggle
+        function toggleTheme() {
+            document.body.setAttribute('data-theme',
+                document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
+            );
+            localStorage.setItem('theme', document.body.getAttribute('data-theme'));
+        }
+
+        // File Upload Handler
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type === "text/plain") {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('input-text').value = e.target.result;
+                    updateLivePreview();
+                }
+                reader.readAsText(file);
+            }
+        });
+
+        // Real-time Preview
+        function updateLivePreview() {
+            const text = document.getElementById('input-text').value;
+            document.getElementById('livePreview').textContent = text.substring(0, 500);
+        }
+
+        // Enhanced Generate Function
+        function generateInfographic() {
+            // ... previous generate code ...
+
+            // Show social sharing
+            document.getElementById('socialSharing').style.display = 'flex';
+            const shareUrl = `https://example.com/infographic/${Date.now()}`;
+            document.querySelectorAll('.social-btn').forEach(btn => {
+                btn.href = `https://${btn.classList[1]}.com/share?url=${encodeURIComponent(shareUrl)}`;
+            });
+        }
+
+        // Initialize theme
+        if (localStorage.getItem('theme')) {
+            document.body.setAttribute('data-theme', localStorage.getItem('theme'));
+        }
+    </script>
+</body>
+</html>
